@@ -3,7 +3,6 @@ if [ -d "$DIR" ]; then
     clear
     mono --server --gc=sgen -O=all .//data/data/com.termux/files/home/1449/Linux/TerrariaServer.exe
 else
-    fi
     pkg update
     pkg install mono wget unzip -y
     wget https://terraria.org/api/download/pc-dedicated-server/terraria-server-1449.zip
