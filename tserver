@@ -1,0 +1,22 @@
+DIR="/data/data/com.termux/files/home/1449/Linux/"
+if [ -d "$DIR" ]; then
+    clear
+    mono --server --gc=sgen -O=all .//data/data/com.termux/files/home/1449/Linux/TerrariaServer.exe
+else
+    fi
+    pkg update
+    pkg install mono wget unzip -y
+    wget https://terraria.org/api/download/pc-dedicated-server/terraria-server-1449.zip
+    unzip terraria-server-1449.zip
+    cd 1449/Linux
+    rm System*
+    rm Mono*
+    rm monoconfig
+    rm mscorlib.dll
+    clear
+    echo export PATH=$PATH:~/terraria-server-script-for-termux >> ~/.bashrc
+    export PATH=$PATH:~/terraria-server-script-for-termux
+    clear
+    echo to run type tserver
+    cd
+   
