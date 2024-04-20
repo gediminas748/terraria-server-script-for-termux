@@ -1,7 +1,7 @@
 DIR="/data/data/com.termux/files/home/1449/Linux/"
 if [ -d "$DIR" ]; then
     clear
-    mono --server --gc=sgen -O=all .//data/data/com.termux/files/home/1449/Linux/TerrariaServer.exe
+    mono --server --gc=sgen -O=all ./data/data/com.termux/files/home/1449/Linux/TerrariaServer.exe
 else
     pkg update
     pkg install mono wget unzip -y
