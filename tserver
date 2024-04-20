@@ -7,7 +7,6 @@ else
     pkg install mono wget unzip -y
     wget https://terraria.org/api/download/pc-dedicated-server/terraria-server-1449.zip
     unzip terraria-server-1449.zip
-    cd 1449/Linux
     rm System*
     rm Mono*
     rm monoconfig
@@ -17,5 +16,6 @@ else
     export PATH=$PATH:~/terraria-server-script-for-termux
     clear
     echo to run type tserver
+    fi
     cd
    
