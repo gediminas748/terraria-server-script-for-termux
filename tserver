@@ -1,41 +1,23 @@
+# Create the tserver launcher script
+    mkdir -p "$HOME/terraria-server-script-for-termux"
+    cat > "$HOME/terraria-server-script-for-termux/tserver" <<EOF
 #!/data/data/com.termux/files/usr/bin/bash
+mono --server --gc=sgen -O=all \$HOME/1449/Linux/TerrariaServer.exe
+EOF
+    chmod +x "$HOME/terraria-server-script-for-termux/tserver"
 
-# Define Terraria server directory
-DIR="$HOME/1449/Linux"
-
-# Check if server is already installed
-if [ -d "$DIR" ]; then
-    clear
-    echo "Terraria server found. Launching..."
-    mono --server --gc=sgen -O=all "$DIR/TerrariaServer.exe"
-else
-    clear
-    echo "Terraria server not found. Installing..."
-
-    # Update and install dependencies
-    pkg update -y && pkg upgrade -y
-    pkg install -y mono wget unzip
-
-    # Download and extract Terraria server
-    wget https://terraria.org/api/download/pc-dedicated-server/terraria-server-1449.zip -O terraria-server.zip
-    unzip terraria-server.zip
-    rm terraria-server.zip
-
-    # Move and clean files
-    mv "1449" "$HOME/"
-    cd "$DIR" || exit
-    rm -f System* Mono* monoconfig mscorlib.dll
-
-    # Add script folder to PATH if not already there
-    SCRIPT_DIR="$HOME/terraria-server-script-for-termux"
-    if ! grep -q "$SCRIPT_DIR" "$HOME/.bashrc"; then
-        echo 'export PATH="$PATH:$HOME/terraria-server-script-for-termux"' >> "$HOME/.bashrc"
+    # Add script dir to PATH if not already there
+    SCRIPT_DIR="\$HOME/terraria-server-script-for-termux"
+    if ! grep -q "\$SCRIPT_DIR" "\$HOME/.bashrc"; then
+        echo 'export PATH="\$PATH:\$HOME/terraria-server-script-for-termux"' >> "\$HOME/.bashrc"
     fi
-    export PATH="$PATH:$SCRIPT_DIR"
 
-    # Final message
+    # Reload PATH immediately
+    export PATH="\$PATH:\$HOME/terraria-server-script-for-termux"
+
+    # OPTIONAL: source .bashrc again to be extra sure
+    source "\$HOME/.bashrc"
+
     clear
     echo "Installation complete!"
-    echo "To run the server next time, type: tserver"
-    echo "If it doesn't work, run: source ~/.bashrc"
-fi
+    echo "You can now type: tserver"
