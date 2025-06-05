@@ -1,23 +1,54 @@
-# Create the tserver launcher script
-    mkdir -p "$HOME/terraria-server-script-for-termux"
-    cat > "$HOME/terraria-server-script-for-termux/tserver" <<EOF
+#!/data/data/com.termux/files/usr/bin/bash
+
+# Terraria server directory
+DIR="$HOME/1449/Linux"
+
+# Check if already installed
+if [ -d "$DIR" ]; then
+    clear
+    echo "Terraria server already installed. Launching..."
+    mono --server --gc=sgen -O=all "$DIR/TerrariaServer.exe"
+else
+    clear
+    echo "Terraria server not found. Installing..."
+
+    # Update & install required packages
+    pkg update -y && pkg upgrade -y
+    pkg install -y mono wget unzip
+
+    # Download Terraria server zip
+    wget https://terraria.org/api/download/pc-dedicated-server/terraria-server-1449.zip -O terraria-server.zip
+
+    # Unzip and clean up
+    unzip terraria-server.zip
+    rm terraria-server.zip
+
+    # Move to home directory
+    mv "1449" "$HOME/"
+    cd "$DIR" || exit
+
+    # Remove unnecessary files
+    rm -f System* Mono* monoconfig mscorlib.dll
+
+    # Create tserver launcher script
+    SCRIPT_DIR="$HOME/terraria-server-script-for-termux"
+    mkdir -p "$SCRIPT_DIR"
+    cat > "$SCRIPT_DIR/tserver" <<EOF
 #!/data/data/com.termux/files/usr/bin/bash
 mono --server --gc=sgen -O=all \$HOME/1449/Linux/TerrariaServer.exe
 EOF
-    chmod +x "$HOME/terraria-server-script-for-termux/tserver"
+    chmod +x "$SCRIPT_DIR/tserver"
 
-    # Add script dir to PATH if not already there
-    SCRIPT_DIR="\$HOME/terraria-server-script-for-termux"
-    if ! grep -q "\$SCRIPT_DIR" "\$HOME/.bashrc"; then
-        echo 'export PATH="\$PATH:\$HOME/terraria-server-script-for-termux"' >> "\$HOME/.bashrc"
+    # Add to PATH in .bashrc if not already present
+    if ! grep -q "$SCRIPT_DIR" "$HOME/.bashrc"; then
+        echo 'export PATH="$PATH:$HOME/terraria-server-script-for-termux"' >> "$HOME/.bashrc"
     fi
 
-    # Reload PATH immediately
-    export PATH="\$PATH:\$HOME/terraria-server-script-for-termux"
-
-    # OPTIONAL: source .bashrc again to be extra sure
-    source "\$HOME/.bashrc"
+    # Export path immediately for current session
+    export PATH="$PATH:$HOME/terraria-server-script-for-termux"
+    source "$HOME/.bashrc" 2>/dev/null
 
     clear
-    echo "Installation complete!"
-    echo "You can now type: tserver"
+    echo "✅ Terraria server installed successfully!"
+    echo "➡️  To start the server, type: tserver"
+fi
